@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${category.name}"> category</title>
+</head>
+<body>
+<h1 th:text="${category.name} +' category'"></h1>
+<form th:action="@{/categories/{id}(id=${category.id})}" th:method="delete" class="d-inline">
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>
+<form th:action="@{/categories/edit/{id}(id=${category.id})}" th:method="get" class="d-inline">
+    <button type="submit" class="btn btn-danger">Edit</button>
+</form>
+</body>
+</html>

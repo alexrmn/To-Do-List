@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Category</title>
+</head>
+<body>
+<h1 th:text="'Edit ' + ${category.name} + ' category'"></h1>
+<form th:action="@{/categories/edit/{id}(id=${category.id})}" th:method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" th:value="${category.name}" />
+    <button type="submit">Edit</button>
+</form>
+
+</body>
+</html>
+
+
