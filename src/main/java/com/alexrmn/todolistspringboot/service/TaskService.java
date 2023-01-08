@@ -1,6 +1,5 @@
 package com.alexrmn.todolistspringboot.service;
 
-import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.Task;
 import com.alexrmn.todolistspringboot.repository.TaskRepository;
 import org.springframework.stereotype.Service;
@@ -11,18 +10,27 @@ import java.util.List;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final CategoryService categoryService;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, CategoryService categoryService) {
         this.taskRepository = taskRepository;
+        this.categoryService = categoryService;
     }
 
     public List<Task> findAll(){
-        return taskRepository.findAll();
+        List<Task> tasks = taskRepository.findAll();
+        for (Task task: tasks) {
+            if (task.getCategory() == null) {
+                task.setCategory(categoryService.findByName("None"));
+            }
+        }
+        return tasks;
     }
 
     public Task findById(Integer id){
         return taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task with id " + id + " wasn't found."));
+
     }
 
     public List<Task> findByCategoryId(Integer id) {

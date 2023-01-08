@@ -23,17 +23,19 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        Category categoryChores = Category.builder().name("Chores").id(1).build();
+        Category categoryNone = Category.builder().name("None").id(1).build();
         Category categoryFitness = Category.builder().name("Fitness").id(2).build();
         Category categoryWork = Category.builder().name("Work").id(3).build();
         Category categoryShopping = Category.builder().name("Shopping").id(4).build();
         Category categoryStudy = Category.builder().name("Study").id(5).build();
+        Category categoryChores = Category.builder().name("Chores").id(6).build();
 
-        categoryRepository.save(categoryChores);
+        categoryRepository.save(categoryNone);
         categoryRepository.save(categoryFitness);
         categoryRepository.save(categoryShopping);
         categoryRepository.save(categoryWork);
         categoryRepository.save(categoryStudy);
+        categoryRepository.save(categoryChores);
 
         Task task1 = Task.builder()
                 .description("Go to the gym")
