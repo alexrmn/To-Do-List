@@ -33,20 +33,19 @@ public class TaskController {
 
     @PostMapping("{id}/edit")
     public String editTask(@ModelAttribute Task updatedTask, @PathVariable Integer id) {
-        Task task = taskService.findById(id);
-        task = Task.builder()
-                .id(updatedTask.getId())
-                .description(updatedTask.getDescription())
-                .deadline(updatedTask.getDeadline())
-                .completed(updatedTask.isCompleted())
-                .category(updatedTask.getCategory())
-                .build();
+        Task task = Task.builder()
+                        .id(updatedTask.getId())
+                        .description(updatedTask.getDescription())
+                        .deadline(updatedTask.getDeadline())
+                        .completed(updatedTask.isCompleted())
+                        .category(updatedTask.getCategory())
+                        .build();
         taskService.updateTask(task);
         return "redirect:/";
     }
 
     @DeleteMapping("/{id}")
-    public String deleteCategory(Model model, @PathVariable Integer id) {
+    public String deleteTask(Model model, @PathVariable Integer id) {
         model.addAttribute("task", taskService.findById(id));
         taskService.deleteTask(id);
         return "redirect:/";
@@ -62,7 +61,6 @@ public class TaskController {
 
     @PostMapping("/new")
     public String createNewTask(Model model, @ModelAttribute Task task) {
-//        model.addAttribute("categories", categoryService.findAll());
         taskService.saveTask(task);
         return "redirect:/";
     }

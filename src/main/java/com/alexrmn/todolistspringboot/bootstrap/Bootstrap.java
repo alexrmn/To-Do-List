@@ -43,7 +43,7 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
                 .category(categoryRepository.findByName("Fitness"))
                 .build();
 
-        Task task2= Task.builder()
+        Task task2 = Task.builder()
                 .description("Take out the trash")
                 .id(2)
                 .deadline(LocalDate.now())
@@ -51,7 +51,7 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
                 .category(categoryRepository.findByName("Chores"))
                 .build();
 
-        Task task3= Task.builder()
+        Task task3 = Task.builder()
                 .description("Write some code")
                 .id(3)
                 .deadline(LocalDate.now())
@@ -59,8 +59,26 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
                 .category(categoryRepository.findByName("Study"))
                 .build();
 
+        Task task4 = Task.builder()
+                .description("Vacuum")
+                .id(4)
+                .deadline(LocalDate.now())
+                .completed(true)
+                .category(categoryRepository.findByName("Chores"))
+                .build();
+
+        Task task5 = Task.builder()
+                .description("Wash clothes")
+                .id(5)
+                .deadline(LocalDate.now())
+                .completed(false)
+                .category(categoryRepository.findByName("Chores"))
+                .build();
+
         taskRepository.save(task1);
         taskRepository.save(task2);
         taskRepository.save(task3);
+        taskRepository.save(task4);
+        taskRepository.save(task5);
     }
 }

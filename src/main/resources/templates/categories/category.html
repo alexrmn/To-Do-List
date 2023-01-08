@@ -23,9 +23,9 @@
 </div>
 <br><br>
 <h3 class="text-center">Tasks in this category</h3>
-<div class="text-center">
+<div class="text-center" style="font-size: 24px">
     <ul>
-        <li th:each="task : ${tasks}" th:text="${task.description}"></li>
+        <li class= "mx-auto" th:each="task : ${tasks}" th:text="${task.description}"></li>
     </ul>
 </div>
 
