@@ -6,11 +6,18 @@
 </head>
 <body>
 <h1 th:text="${category.name} +' category'"></h1>
-<form th:action="@{/categories/{id}(id=${category.id})}" th:method="delete" class="d-inline">
-    <button type="submit" class="btn btn-danger">Delete</button>
-</form>
+
+
 <form th:action="@{/categories/edit/{id}(id=${category.id})}" th:method="get" class="d-inline">
-    <button type="submit" class="btn btn-danger">Edit</button>
+    <button type="submit" class="btn btn-danger">Edit Category</button>
 </form>
+<form th:action="@{/categories/{id}(id=${category.id})}" th:method="delete" class="d-inline">
+    <button type="submit" class="btn btn-danger">Delete Category</button>
+</form>
+
+<h2>Tasks</h2>
+<ul>
+    <li th:each="task : ${tasks}" th:text="${task.description}"></li>
+</ul>
 </body>
 </html>

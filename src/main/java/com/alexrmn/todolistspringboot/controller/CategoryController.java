@@ -2,6 +2,7 @@ package com.alexrmn.todolistspringboot.controller;
 
 import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.service.CategoryService;
+import com.alexrmn.todolistspringboot.service.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,21 +12,23 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final TaskService taskService;
 
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService, TaskService taskService) {
         this.categoryService = categoryService;
+        this.taskService = taskService;
     }
 
     @GetMapping("/show-categories")
     public String showCategories(Model model, @ModelAttribute Category category){
         model.addAttribute("categories",categoryService.findAll());
-
         return "categories/showCategories";
     }
 
     @GetMapping("/{id}")
-    public String findById(Model model, @PathVariable Integer id) {
+    public String showCategory(Model model, @PathVariable Integer id) {
         model.addAttribute("category",categoryService.findById(id));
+        model.addAttribute("tasks",taskService.findByCategoryId(id));
         return "categories/category";
     }
 
@@ -52,7 +55,7 @@ public class CategoryController {
     public String updateCategory(@ModelAttribute Category category,@PathVariable Integer id){
         Category category1 = categoryService.findById(id);
         category1.setName(category.getName());
-        categoryService.saveCategory(category1);
+        categoryService.updateCategory(category1);
         return "redirect:/categories/show-categories";
     }
 }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task</title>
+</head>
+<body>
+<form th:action="@{/{id}/edit(id=${task.id})}" th:method="post" th:object="${task}">
+    <label for="description">Description:</label><br>
+    <input type="text" id="description" name="description" th:value="${task.description}"/><br>
+    <label for="deadline">Deadline:</label><br>
+    <input type="date" id="deadline" name="deadline" th:value="${task.deadline}"/><br>
+    <label for="category">Category:</label><br>
+    <select id="category" name="category">
+        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == task.category.id}"></option>
+    </select><br>
+    <label for="completed">Completed:</label><br>
+    <input type="checkbox" id="completed" name="completed" th:checked="${task.completed}"/><br>
+    <button type="submit">Save</button>
+</form>
+<form th:action="@{/{id}(id=${task.id})}" th:method="delete" class="d-inline">
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>
+</body>
+</html>
