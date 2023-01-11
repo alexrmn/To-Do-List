@@ -3,8 +3,11 @@ package com.alexrmn.todolistspringboot.controller;
 import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
+import jakarta.validation.Valid;
+import org.hibernate.query.results.ResultBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -33,7 +36,10 @@ public class CategoryController {
     }
 
     @PostMapping("/show-categories")
-    public String createCategory(@ModelAttribute Category category){
+    public String createCategory(@Valid Category category, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return "/categories/categoryValidationError";
+        }
         categoryService.createCategory(category);
         return "redirect:/categories/show-categories";
     }
@@ -52,7 +58,10 @@ public class CategoryController {
     }
 
     @PostMapping("/edit/{id}")
-    public String updateCategory(@ModelAttribute Category category,@PathVariable Integer id){
+    public String updateCategory(@Valid Category category, BindingResult bindingResult, @PathVariable Integer id){
+        if (bindingResult.hasErrors()) {
+            return "/categories/categoryValidationError";
+        }
         Category category1 = categoryService.findById(id);
         category1.setName(category.getName());
         categoryService.updateCategory(category1);

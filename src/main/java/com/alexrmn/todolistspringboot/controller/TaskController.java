@@ -3,8 +3,10 @@ package com.alexrmn.todolistspringboot.controller;
 import com.alexrmn.todolistspringboot.model.Task;
 import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -32,7 +34,10 @@ public class TaskController {
     }
 
     @PostMapping("{id}/edit")
-    public String editTask(@ModelAttribute Task updatedTask, @PathVariable Integer id) {
+    public String editTask(@Valid Task updatedTask, BindingResult bindingResult, @PathVariable Integer id) {
+        if (bindingResult.hasErrors()) {
+            return "/taskValidationError";
+        }
         Task task = Task.builder()
                         .id(updatedTask.getId())
                         .description(updatedTask.getDescription())
@@ -60,7 +65,11 @@ public class TaskController {
     }
 
     @PostMapping("/new")
-    public String createNewTask(Model model, @ModelAttribute Task task) {
+    public String createNewTask(@Valid Task task, BindingResult bindingResult) {
+        System.out.println(bindingResult);
+        if (bindingResult.hasErrors()) {
+            return "/taskValidationError";
+        }
         taskService.saveTask(task);
         return "redirect:/";
     }
