@@ -36,7 +36,7 @@
         </div>
         <button type="submit" class="btn btn-primary btn-block">Save</button>
     </form>
-    <form th:action="@{/{id}(id=${task.id})}" th:method="delete" class="d-inline">
+    <form th:action="@{/{id}/delete(id=${task.id})}" th:method="delete" class="d-inline">
         <button type="submit" class="btn btn-danger btn-block">Delete</button>
         <br>
         <br>

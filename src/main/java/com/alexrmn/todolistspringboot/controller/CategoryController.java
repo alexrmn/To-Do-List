@@ -35,7 +35,7 @@ public class CategoryController {
         return "categories/category";
     }
 
-    @PostMapping("/show-categories")
+    @PostMapping("/show-categories/create-new-category")
     public String createCategory(@Valid Category category, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return "/categories/categoryValidationError";
@@ -44,7 +44,7 @@ public class CategoryController {
         return "redirect:/categories/show-categories";
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     public String deleteCategory(Model model, @PathVariable Integer id) {
         model.addAttribute("category", categoryService.findById(id));
         categoryService.deleteCategory(id);
@@ -57,7 +57,7 @@ public class CategoryController {
         return "categories/edit-category";
     }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/edit/{id}/save")
     public String updateCategory(@Valid Category category, BindingResult bindingResult, @PathVariable Integer id){
         if (bindingResult.hasErrors()) {
             return "/categories/categoryValidationError";

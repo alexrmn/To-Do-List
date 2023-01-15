@@ -11,7 +11,7 @@
 <body>
 <H1 class="text-center">Create New Task</H1>
 <div class="container mt-5, align-content-center" style="width: 300px">
-  <form th:action="@{/new}" th:method="post" th:object="${task}">
+  <form th:action="@{/create-new-task}" th:method="post" th:object="${task}">
     <div class="form-group row">
       <label for="description">Description:</label><br>
         <input type="text" id="description" name="description" th:value="${task.description}"/><br>

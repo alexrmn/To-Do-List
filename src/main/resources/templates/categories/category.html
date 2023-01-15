@@ -17,7 +17,7 @@
     <form th:action="@{/categories/edit/{id}(id=${category.id})}" th:method="get" class="d-inline">
         <button type="submit" class="btn btn-primary">Edit Category</button>
     </form>
-    <form th:action="@{/categories/{id}(id=${category.id})}" th:method="delete" class="d-inline">
+    <form th:action="@{/categories/{id}/delete(id=${category.id})}" th:method="delete" class="d-inline">
         <button type="submit" class="btn btn-danger">Delete Category</button>
     </form>
 </div>

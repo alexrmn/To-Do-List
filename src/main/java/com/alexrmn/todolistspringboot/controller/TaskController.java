@@ -49,7 +49,7 @@ public class TaskController {
         return "redirect:/";
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     public String deleteTask(Model model, @PathVariable Integer id) {
         model.addAttribute("task", taskService.findById(id));
         taskService.deleteTask(id);
@@ -64,7 +64,7 @@ public class TaskController {
         return "createNewTask";
     }
 
-    @PostMapping("/new")
+    @PostMapping("/create-new-task")
     public String createNewTask(@Valid Task task, BindingResult bindingResult) {
         System.out.println(bindingResult);
         if (bindingResult.hasErrors()) {

@@ -27,7 +27,7 @@
   <h3 class="text-center">Create a New Category</h3>
 <br>
 <div class="text-center">
-  <form th:action="@{/categories/show-categories}" th:method="post">
+  <form th:action="@{/categories/show-categories/create-new-category}" th:method="post">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" th:value="${category.name}" />
     <button class="btn btn-primary btn-block" type="submit">Create</button>
