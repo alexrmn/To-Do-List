@@ -61,27 +61,31 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}/delete")
-    public String deleteCategory(Model model, @PathVariable Integer id) {
+    public String deleteCategory(Model model, @PathVariable Integer id, Authentication authentication) {
         model.addAttribute("category", categoryService.findById(id));
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        User user = new User(myUserDetails);
         categoryService.deleteCategory(id);
-        return "redirect:/categories/show-categories";
+        return "redirect:/categories/user/" + user.getId();
     }
 
     @GetMapping("/edit/{id}")
-    public String showUpdateCategoryPage(@PathVariable Integer id, Model model){
+    public String showEditCategoryPage(@PathVariable Integer id, Model model){
         model.addAttribute("category", categoryService.findById(id));
         return "categories/edit-category";
     }
 
     @PostMapping("/edit/{id}/save")
-    public String updateCategory(@Valid Category category, BindingResult bindingResult, @PathVariable Integer id){
+    public String updateCategory(@Valid Category category, BindingResult bindingResult, @PathVariable Integer id, Authentication authentication){
         if (bindingResult.hasErrors()) {
             return "/categories/categoryValidationError";
         }
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        User user = new User(myUserDetails);
         Category category1 = categoryService.findById(id);
         category1.setName(category.getName());
         categoryService.updateCategory(category1);
-        return "redirect:/categories/show-categories";
+        return "redirect:/categories/user/" + user.getId();
     }
 }
 

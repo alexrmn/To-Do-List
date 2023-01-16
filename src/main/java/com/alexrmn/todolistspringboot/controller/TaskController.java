@@ -46,40 +46,51 @@ public class TaskController {
     }
 
     @GetMapping("{id}")
-    public String showAndEditTask(@PathVariable Integer id, Model model) {
+    public String showEditTaskPage(@PathVariable Integer id, Model model, Authentication authentication) {
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        User user = new User(userDetails);
+        model.addAttribute("user", user);
         model.addAttribute("task", taskService.findById(id));
         model.addAttribute("categories", categoryService.findAll());
         return "/tasks/task";
     }
 
     @PostMapping("{id}/edit")
-    public String editTask(@Valid Task updatedTask, BindingResult bindingResult, @PathVariable Integer id) {
+    public String editTask(@Valid Task updatedTask, BindingResult bindingResult, @PathVariable Integer id, Authentication authentication) {
         if (bindingResult.hasErrors()) {
             return "/tasks/taskValidationError";
         }
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        User user = new User(userDetails);
+
         Task task = Task.builder()
                         .id(updatedTask.getId())
                         .description(updatedTask.getDescription())
                         .deadline(updatedTask.getDeadline())
                         .completed(updatedTask.isCompleted())
                         .category(updatedTask.getCategory())
+                        .user(user)
                         .build();
         taskService.updateTask(task);
-        return "redirect:/tasks/";
+        return "redirect:/tasks/user/" + user.getId();
     }
 
     @DeleteMapping("/{id}/delete")
-    public String deleteTask(Model model, @PathVariable Integer id) {
+    public String deleteTask(Model model, @PathVariable Integer id, Authentication authentication) {
         model.addAttribute("task", taskService.findById(id));
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        User user = new User(userDetails);
         taskService.deleteTask(id);
-        return "redirect:/tasks/";
+        return "redirect:/tasks/user/" + user.getId();
     }
 
     @GetMapping("/new")
-    public String showCreateNewTaskPage(Model model) {
+    public String showCreateNewTaskPage(Model model, Authentication authentication) {
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        User user = new User(userDetails);
         Task task = new Task();
         model.addAttribute("task", task);
-        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("categories", categoryService.findByUserId(user.getId()));
         return "/tasks/createNewTask";
     }
 

@@ -24,7 +24,8 @@ public class HomepageController {
     public String showHomepage(Model model, Authentication authentication) {
         if(authentication != null) {
             MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
-            model.addAttribute("user", userDetails);
+            User user = new User(userDetails);
+            model.addAttribute("user", user);
         }
         return "homepage";
     }
