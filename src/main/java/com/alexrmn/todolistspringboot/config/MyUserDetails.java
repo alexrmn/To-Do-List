@@ -1,5 +1,7 @@
 package com.alexrmn.todolistspringboot.config;
 
+import com.alexrmn.todolistspringboot.model.Category;
+import com.alexrmn.todolistspringboot.model.Task;
 import com.alexrmn.todolistspringboot.model.User;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @NoArgsConstructor
 public class MyUserDetails implements UserDetails {
@@ -51,5 +54,26 @@ public class MyUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Integer getId(){
+        return user.getId();
+    }
+
+    public String getEmail() {
+        return user.getEmail();
+    }
+
+    public List<Category> getCategories() {
+        return  user.getCategories();
+    }
+
+    public String getRoles() {
+        return user.getRoles();
+    }
+
+
+    public List<Task> getTasks() {
+        return user.getTasks();
     }
 }

@@ -37,6 +37,10 @@ public class TaskService {
         return taskRepository.findByCategoryId(id);
     }
 
+    public List<Task> findByUserId(Integer id){
+        return taskRepository.findByUserId(id);
+    }
+
     public void saveTask(Task task){
         taskRepository.save(task);
     }

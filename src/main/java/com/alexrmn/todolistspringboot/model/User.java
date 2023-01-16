@@ -1,8 +1,10 @@
 package com.alexrmn.todolistspringboot.model;
 
+import com.alexrmn.todolistspringboot.config.MyUserDetails;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -31,6 +33,19 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
+
+    @OneToMany(mappedBy = "user")
+    private List<Category> categories;
+
+    public User(MyUserDetails myUserDetails) {
+        this.setId(myUserDetails.getId());
+        this.setUsername(myUserDetails.getUsername());
+        this.setPassword(myUserDetails.getPassword());
+        this.setEmail(myUserDetails.getEmail());
+        this.setCategories(myUserDetails.getCategories());
+        this.setRoles(myUserDetails.getRoles());
+        this.setTasks(myUserDetails.getTasks());
+    }
 
 
 

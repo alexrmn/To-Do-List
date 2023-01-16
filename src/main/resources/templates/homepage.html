@@ -25,6 +25,9 @@
     <div style="text-align: center;">
       <a href="/login" class="btn btn-primary">Login</a>
       <a href="/register" class="btn btn-primary">Register</a>
+      <span th:if="${user != null}">
+        <a th:href="@{/tasks/user/{userId}(userId=${user.id})}" class="btn btn-primary">Show Tasks</a>
+      </span>
     </div>
   </div>
 </div>

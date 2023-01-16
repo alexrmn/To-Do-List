@@ -1,13 +1,21 @@
 package com.alexrmn.todolistspringboot.controller;
 
+import com.alexrmn.todolistspringboot.config.MyUserDetails;
 import com.alexrmn.todolistspringboot.model.Task;
+import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/tasks")
@@ -24,6 +32,16 @@ public class TaskController {
     @GetMapping("/")
     public String showTasks(Model model){
         model.addAttribute("tasks", taskService.findAll());
+        return "/tasks/showTasks";
+    }
+
+    @GetMapping("/user/{id}")
+    public String getTasksByUserId(@PathVariable Integer id, Model model, Authentication authentication) {
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        User user = new User(myUserDetails);
+        List<Task> usersTasks = taskService.findByUserId(id);
+        model.addAttribute("tasks", usersTasks);
+        model.addAttribute("user", user);
         return "/tasks/showTasks";
     }
 
@@ -66,12 +84,14 @@ public class TaskController {
     }
 
     @PostMapping("/create-new-task")
-    public String createNewTask(@Valid Task task, BindingResult bindingResult) {
+    public String createNewTask(@Valid Task task, BindingResult bindingResult, Authentication authentication) {
         System.out.println(bindingResult);
         if (bindingResult.hasErrors()) {
             return "/tasks/taskValidationError";
         }
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        task.setUser(new User((myUserDetails)));
         taskService.saveTask(task);
-        return "redirect:/tasks/";
+        return "redirect:/tasks/user/" + task.getUser().getId();
     }
 }

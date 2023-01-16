@@ -21,7 +21,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/categories/**").hasRole("USER")
                 .and()
                 .formLogin()
-                .defaultSuccessUrl("/tasks/");
+                .defaultSuccessUrl("/");
 
         return http.build();
     }

@@ -1,11 +1,12 @@
 package com.alexrmn.todolistspringboot.controller;
 
+
 import com.alexrmn.todolistspringboot.config.MyUserDetails;
-import com.alexrmn.todolistspringboot.config.MyUserDetailsService;
 import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,7 +21,11 @@ public class HomepageController {
     private final UserService userService;
 
     @GetMapping("/")
-    public String showHomepage() {
+    public String showHomepage(Model model, Authentication authentication) {
+        if(authentication != null) {
+            MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+            model.addAttribute("user", userDetails);
+        }
         return "homepage";
     }
 
@@ -40,5 +45,6 @@ public class HomepageController {
         userService.saveUser(user);
         return "redirect:/";
     }
+
 
 }

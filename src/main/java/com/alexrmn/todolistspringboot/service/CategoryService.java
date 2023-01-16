@@ -32,6 +32,10 @@ public class CategoryService {
         return categoryRepository.findByName(name);
     }
 
+    public List<Category> findByUserId(Integer id) {
+        return categoryRepository.findByUserId(id);
+    }
+
     public void updateCategory(Category updatedCategory) {
         Category category = categoryRepository.findById(updatedCategory.getId())
                 .orElseThrow(() -> new RuntimeException("Category with id " + updatedCategory.getId() + " wasn't found."));

@@ -1,4 +1,4 @@
-package com.alexrmn.todolistspringboot.bootstrap;
+package com.alexrmn.todolistspringboot.dataloader;
 
 import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.Task;
@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
-@Component
-public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
+//@Component
+public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private final TaskRepository taskRepository;
     private final CategoryRepository categoryRepository;
 
-    public Bootstrap(TaskRepository taskRepository, CategoryRepository categoryRepository) {
+    public DataLoader(TaskRepository taskRepository, CategoryRepository categoryRepository) {
         this.taskRepository = taskRepository;
         this.categoryRepository = categoryRepository;
     }

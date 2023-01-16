@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Integer> {
-    @Query("SELECT c FROM Task c WHERE c.category.id = :id")
-    List<Task> findByCategoryId(@Param("id") Integer id);
+
+    List<Task> findByCategoryId(Integer id);
+
+    List<Task> findByUserId(Integer id);
 }
