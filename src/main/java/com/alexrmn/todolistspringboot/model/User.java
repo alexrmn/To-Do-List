@@ -1,48 +1,38 @@
 package com.alexrmn.todolistspringboot.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
+    @NotNull
+    private String username;
+
+    @NotNull
     private  String email;
 
+    @NotNull
     private String password;
 
-    public User() {
-    }
+    private String roles;
 
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks;
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

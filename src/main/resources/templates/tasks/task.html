@@ -11,7 +11,7 @@
 <body>
 <H1 class="text-center">Edit New Task</H1>
 <div class="container mt-5, align-content-center" style="width: 300px">
-    <form th:action="@{/{id}/edit(id=${task.id})}" th:method="post" th:object="${task}">
+    <form th:action="@{/tasks/{id}/edit(id=${task.id})}" th:method="post" th:object="${task}">
         <div class="form-group row">
             <label for="description">Description:</label><br>
             <input type="text" id="description" name="description" th:value="${task.description}"/><br>
@@ -36,11 +36,11 @@
         </div>
         <button type="submit" class="btn btn-primary btn-block">Save</button>
     </form>
-    <form th:action="@{/{id}/delete(id=${task.id})}" th:method="delete" class="d-inline">
+    <form th:action="@{/tasks/{id}/delete(id=${task.id})}" th:method="delete" class="d-inline">
         <button type="submit" class="btn btn-danger btn-block">Delete</button>
         <br>
         <br>
-        <a class ="btn btn-primary" href="/">Home</a>
+        <a class ="btn btn-primary" href="/tasks/">Home</a>
     </form>
 
 

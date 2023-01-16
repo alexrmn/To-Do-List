@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/tasks")
 public class TaskController {
 
     private final TaskService taskService;
@@ -23,20 +24,20 @@ public class TaskController {
     @GetMapping("/")
     public String showTasks(Model model){
         model.addAttribute("tasks", taskService.findAll());
-        return "showTasks";
+        return "/tasks/showTasks";
     }
 
     @GetMapping("{id}")
     public String showAndEditTask(@PathVariable Integer id, Model model) {
         model.addAttribute("task", taskService.findById(id));
         model.addAttribute("categories", categoryService.findAll());
-        return "task";
+        return "/tasks/task";
     }
 
     @PostMapping("{id}/edit")
     public String editTask(@Valid Task updatedTask, BindingResult bindingResult, @PathVariable Integer id) {
         if (bindingResult.hasErrors()) {
-            return "/taskValidationError";
+            return "/tasks/taskValidationError";
         }
         Task task = Task.builder()
                         .id(updatedTask.getId())
@@ -46,14 +47,14 @@ public class TaskController {
                         .category(updatedTask.getCategory())
                         .build();
         taskService.updateTask(task);
-        return "redirect:/";
+        return "redirect:/tasks/";
     }
 
     @DeleteMapping("/{id}/delete")
     public String deleteTask(Model model, @PathVariable Integer id) {
         model.addAttribute("task", taskService.findById(id));
         taskService.deleteTask(id);
-        return "redirect:/";
+        return "redirect:/tasks/";
     }
 
     @GetMapping("/new")
@@ -61,16 +62,16 @@ public class TaskController {
         Task task = new Task();
         model.addAttribute("task", task);
         model.addAttribute("categories", categoryService.findAll());
-        return "createNewTask";
+        return "/tasks/createNewTask";
     }
 
     @PostMapping("/create-new-task")
     public String createNewTask(@Valid Task task, BindingResult bindingResult) {
         System.out.println(bindingResult);
         if (bindingResult.hasErrors()) {
-            return "/taskValidationError";
+            return "/tasks/taskValidationError";
         }
         taskService.saveTask(task);
-        return "redirect:/";
+        return "redirect:/tasks/";
     }
 }

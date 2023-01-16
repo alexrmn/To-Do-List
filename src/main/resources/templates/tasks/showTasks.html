@@ -21,7 +21,7 @@
     </tr>
     <tr th:each="task : ${tasks}">
         <td>
-            <a th:href="@{/{id}(id=${task.id})}" th:text="${task.description}"></a>
+            <a th:href="@{/tasks/{id}(id=${task.id})}" th:text="${task.description}"></a>
         </td>
         <td th:text="${task.deadline}">Task Deadline</td>
         <td th:text="${task.category.name}">Task Category</td>
@@ -30,7 +30,7 @@
 </table>
 <br><br>
 <div class="d-flex justify-content-center">
-    <a class ="btn btn-primary" href="/new">Create New Task</a>
+    <a class ="btn btn-primary" href="/tasks/new">Create New Task</a>
     <a class ="btn btn-primary" href="/categories/show-categories">Show Categories</a>
 </div>
 
