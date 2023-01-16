@@ -1,8 +1,7 @@
 # To-Do-List
 
 ToDoList
-A simple and user-friendly task management application built using Spring Boot, Spring MVC, Hibernate, JPA, MySQL, Thymeleaf and Project Lombok. 
-This application allows users to register and login, create, edit, and delete tasks, manage categories assigned to each task, and customize their own categories.
+A simple and user-friendly task management application built using Spring Boot, Spring MVC, Hibernate, JPA, MySQL, Thymeleaf and Project Lombok. This application allows users to register and login, create, edit, and delete tasks, manage categories assigned to each task, and customize their own categories. The application is also secured using Spring Security, configured to use form login for authentication.
 
 Features:
 
