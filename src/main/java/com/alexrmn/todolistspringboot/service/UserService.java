@@ -19,7 +19,10 @@ public class UserService {
 
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles("ROLE_USER");
+        if (user.getRoles() == null) {
+            user.setRoles("ROLE_USER");
+        }
+
         userRepository.save(user);
 //        creating default categories
 

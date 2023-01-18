@@ -25,12 +25,6 @@ public class CategoryController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/show-categories")
-    public String showCategories(Model model, @ModelAttribute Category category){
-        model.addAttribute("categories",categoryService.findAll());
-        return "categories/showCategories";
-    }
-
     @GetMapping("/user/{id}")
     public String showCategoriesByUserId(@PathVariable Integer id, Model model, Authentication authentication) {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
@@ -86,6 +80,12 @@ public class CategoryController {
         category1.setName(category.getName());
         categoryService.updateCategory(category1);
         return "redirect:/categories/user/" + user.getId();
+    }
+
+    @GetMapping("/show-all-categories")
+    public String showCategories(Model model, @ModelAttribute Category category){
+        model.addAttribute("categories",categoryService.findAll());
+        return "categories/showAllCategories";
     }
 }
 

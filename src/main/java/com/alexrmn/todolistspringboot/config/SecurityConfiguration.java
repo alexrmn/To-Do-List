@@ -17,6 +17,8 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests()
                 .requestMatchers("/","/register", "/tasks/taskValidationError").permitAll()
+                .requestMatchers("/categories/show-all-categories").hasRole("ADMIN")
+                .requestMatchers("/task/show-all-tasks").hasRole("ADMIN")
                 .requestMatchers("/tasks/**").hasRole("USER")
                 .requestMatchers("/categories/**").hasRole("USER")
                 .and()

@@ -29,12 +29,6 @@ public class TaskController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/")
-    public String showTasks(Model model){
-        model.addAttribute("tasks", taskService.findAll());
-        return "/tasks/showTasks";
-    }
-
     @GetMapping("/user/{id}")
     public String getTasksByUserId(@PathVariable Integer id, Model model, Authentication authentication) {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
@@ -104,5 +98,11 @@ public class TaskController {
         task.setUser(new User((myUserDetails)));
         taskService.saveTask(task);
         return "redirect:/tasks/user/" + task.getUser().getId();
+    }
+
+    @GetMapping("/show-all-tasks")
+    public String showTasks(Model model){
+        model.addAttribute("tasks", taskService.findAll());
+        return "/tasks/showAllTasks";
     }
 }
