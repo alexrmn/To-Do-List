@@ -1,6 +1,8 @@
 package com.alexrmn.todolistspringboot.service;
 
 import com.alexrmn.todolistspringboot.model.Task;
+import com.alexrmn.todolistspringboot.model.dto.CreateTaskDto;
+import com.alexrmn.todolistspringboot.model.dto.UpdateTaskDto;
 import com.alexrmn.todolistspringboot.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +43,8 @@ public class TaskService {
         return taskRepository.findByUserId(id);
     }
 
-    public void saveTask(Task task){
-        taskRepository.save(task);
+    public void saveTask(CreateTaskDto createTaskDto){
+        taskRepository.save(new Task(createTaskDto));
     }
 
     public void deleteTask(Integer id) {
@@ -50,13 +52,13 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    public void updateTask(Task updatedTask) {
-        Task task = taskRepository.findById(updatedTask.getId())
-                .orElseThrow(() -> new RuntimeException("Task with id " + updatedTask.getId() + " wasn't found."));
-        task.setDescription(updatedTask.getDescription());
-        task.setCompleted(updatedTask.isCompleted());
-        task.setCategory(updatedTask.getCategory());
-        task.setDeadline(updatedTask.getDeadline());
-        taskRepository.save(updatedTask);
+    public void updateTask(UpdateTaskDto updateTaskDto) {
+        Task task = taskRepository.findById(updateTaskDto.getId())
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        task.setCategory(updateTaskDto.getCategory());
+        task.setDeadline(updateTaskDto.getDeadline());
+        task.setCompleted(updateTaskDto.isCompleted());
+        taskRepository.save(task);
     }
 }

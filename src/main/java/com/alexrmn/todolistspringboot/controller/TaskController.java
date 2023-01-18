@@ -3,6 +3,8 @@ package com.alexrmn.todolistspringboot.controller;
 import com.alexrmn.todolistspringboot.config.MyUserDetails;
 import com.alexrmn.todolistspringboot.model.Task;
 import com.alexrmn.todolistspringboot.model.User;
+import com.alexrmn.todolistspringboot.model.dto.CreateTaskDto;
+import com.alexrmn.todolistspringboot.model.dto.UpdateTaskDto;
 import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
 import jakarta.validation.Valid;
@@ -44,29 +46,19 @@ public class TaskController {
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         User user = new User(userDetails);
         model.addAttribute("user", user);
-        model.addAttribute("task", taskService.findById(id));
-        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("task", new UpdateTaskDto(taskService.findById(id)));
+        model.addAttribute("categories", categoryService.findByUserId(user.getId()));
         return "/tasks/task";
     }
 
     @PostMapping("{id}/edit")
-    public String editTask(@Valid Task updatedTask, BindingResult bindingResult, @PathVariable Integer id, Authentication authentication) {
+    public String editTask(@Valid UpdateTaskDto updateTaskDto, BindingResult bindingResult, @PathVariable Integer id) {
         if (bindingResult.hasErrors()) {
             return "/tasks/taskValidationError";
         }
-        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
-        User user = new User(userDetails);
-
-        Task task = Task.builder()
-                        .id(updatedTask.getId())
-                        .description(updatedTask.getDescription())
-                        .deadline(updatedTask.getDeadline())
-                        .completed(updatedTask.isCompleted())
-                        .category(updatedTask.getCategory())
-                        .user(user)
-                        .build();
-        taskService.updateTask(task);
-        return "redirect:/tasks/user/" + user.getId();
+        updateTaskDto.setUser(taskService.findById(id).getUser());
+        taskService.updateTask(updateTaskDto);
+        return "redirect:/tasks/user/" + updateTaskDto.getUser().getId();
     }
 
     @DeleteMapping("/{id}/delete")
@@ -89,15 +81,15 @@ public class TaskController {
     }
 
     @PostMapping("/create-new-task")
-    public String createNewTask(@Valid Task task, BindingResult bindingResult, Authentication authentication) {
+    public String createNewTask(@Valid CreateTaskDto createTaskDto, BindingResult bindingResult, Authentication authentication) {
         System.out.println(bindingResult);
         if (bindingResult.hasErrors()) {
             return "/tasks/taskValidationError";
         }
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        task.setUser(new User((myUserDetails)));
-        taskService.saveTask(task);
-        return "redirect:/tasks/user/" + task.getUser().getId();
+        createTaskDto.setUser(new User((myUserDetails)));
+        taskService.saveTask(createTaskDto);
+        return "redirect:/tasks/user/" + createTaskDto.getUser().getId();
     }
 
     @GetMapping("/show-all-tasks")

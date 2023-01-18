@@ -1,6 +1,7 @@
 package com.alexrmn.todolistspringboot.model;
 
 import com.alexrmn.todolistspringboot.config.MyUserDetails;
+import com.alexrmn.todolistspringboot.model.dto.CreateUserDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -48,6 +49,9 @@ public class User {
     }
 
 
-
-
+    public User(CreateUserDto createUserDto) {
+        this.setUsername(createUserDto.getUsername());
+        this.setPassword(createUserDto.getPassword());
+        this.setEmail(createUserDto.getEmail());
+    }
 }

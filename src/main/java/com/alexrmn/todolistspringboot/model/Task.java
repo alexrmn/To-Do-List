@@ -1,5 +1,6 @@
 package com.alexrmn.todolistspringboot.model;
 
+import com.alexrmn.todolistspringboot.model.dto.CreateTaskDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,7 +23,6 @@ public class Task {
     private Integer id;
 
     @Column(name="description")
-    @NotBlank
     private String description;
 
     @Column(name="deadline")
@@ -36,6 +36,14 @@ public class Task {
 
     @ManyToOne
     private User user;
+
+    public Task(CreateTaskDto createTaskDto) {
+        description = createTaskDto.getDescription();
+        deadline = createTaskDto.getDeadline();
+        completed = createTaskDto.isCompleted();
+        category = createTaskDto.getCategory();
+        user = createTaskDto.getUser();
+    }
 
 }
 

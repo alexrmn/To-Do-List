@@ -21,14 +21,14 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        User admin = User.builder()
-                .id(1)
-                .username("admin")
-                .email("admin@mail.com")
-                .password("admin")
-                .roles("ROLE_ADMIN,ROLE_USER")
-                .build();
-        userService.saveUser(admin);
+//        User admin = User.builder()
+//                .id(1)
+//                .username("admin")
+//                .email("admin@mail.com")
+//                .password("admin")
+//                .roles("ROLE_ADMIN,ROLE_USER")
+//                .build();
+//        userService.saveUser(admin);
     }
 
 

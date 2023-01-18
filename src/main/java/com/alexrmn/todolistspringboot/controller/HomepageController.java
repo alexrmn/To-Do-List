@@ -3,6 +3,7 @@ package com.alexrmn.todolistspringboot.controller;
 
 import com.alexrmn.todolistspringboot.config.MyUserDetails;
 import com.alexrmn.todolistspringboot.model.User;
+import com.alexrmn.todolistspringboot.model.dto.CreateUserDto;
 import com.alexrmn.todolistspringboot.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,18 +33,19 @@ public class HomepageController {
 
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
+        CreateUserDto createUserDto = new CreateUserDto();
+        model.addAttribute("user", createUserDto);
         return "registrationPage";
     }
 
     @PostMapping("/register")
-    public String registerUser(@Valid User user, BindingResult bindingResult) {
+    public String registerUser(@Valid CreateUserDto createUserDto, BindingResult bindingResult) {
         //todo
         if (bindingResult.hasErrors()) {
-            return "/tasks/taskValidationError";
+            System.out.println(bindingResult);
+            throw new RuntimeException("Error creating user");
         }
-        userService.saveUser(user);
+        userService.saveUser(createUserDto);
         return "redirect:/";
     }
 

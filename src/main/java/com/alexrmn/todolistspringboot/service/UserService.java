@@ -2,6 +2,7 @@ package com.alexrmn.todolistspringboot.service;
 
 import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.User;
+import com.alexrmn.todolistspringboot.model.dto.CreateUserDto;
 import com.alexrmn.todolistspringboot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,11 +18,13 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final CategoryService categoryService;
 
-    public void saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (user.getRoles() == null) {
-            user.setRoles("ROLE_USER");
-        }
+    public void saveUser(CreateUserDto userDto) {
+        User user = User.builder()
+                .username(userDto.getUsername())
+                .email(userDto.getEmail())
+                .roles("ROLE_USER")
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .build();
 
         userRepository.save(user);
 //        creating default categories
