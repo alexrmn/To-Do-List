@@ -1,6 +1,7 @@
 package com.alexrmn.todolistspringboot.service;
 
 import com.alexrmn.todolistspringboot.model.Category;
+import com.alexrmn.todolistspringboot.model.dto.CreateCategoryDto;
 import com.alexrmn.todolistspringboot.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,12 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public void createCategory(Category category) {
+    public void createCategory(CreateCategoryDto createCategoryDto) {
+        Category category = Category.builder()
+                .name(createCategoryDto.getName())
+                .user(createCategoryDto.getUser())
+                .build();
+
         categoryRepository.save(category);
     }
 

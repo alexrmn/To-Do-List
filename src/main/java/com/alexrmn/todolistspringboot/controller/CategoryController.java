@@ -3,10 +3,11 @@ package com.alexrmn.todolistspringboot.controller;
 import com.alexrmn.todolistspringboot.config.MyUserDetails;
 import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.User;
+import com.alexrmn.todolistspringboot.model.dto.CreateCategoryDto;
+import com.alexrmn.todolistspringboot.model.dto.UpdateCategoryDto;
 import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
 import jakarta.validation.Valid;
-import org.hibernate.query.results.ResultBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +32,7 @@ public class CategoryController {
         User user = new User(myUserDetails);
         model.addAttribute("categories", categoryService.findByUserId(id));
         model.addAttribute("user", user);
-        model.addAttribute("category", new Category());
+        model.addAttribute("category", new CreateCategoryDto());
         return "categories/showCategories";
     }
 
@@ -43,14 +44,14 @@ public class CategoryController {
     }
 
     @PostMapping("/show-categories/create-new-category")
-    public String createCategory(@Valid Category category, BindingResult bindingResult, Authentication authentication){
+    public String createCategory(@Valid CreateCategoryDto createCategoryDto, BindingResult bindingResult, Authentication authentication){
         if (bindingResult.hasErrors()) {
             return "/categories/categoryValidationError";
         }
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         User user = new User(myUserDetails);
-        category.setUser(user);
-        categoryService.createCategory(category);
+        createCategoryDto.setUser(user);
+        categoryService.createCategory(createCategoryDto);
         return "redirect:/categories/user/" + user.getId();
     }
 
@@ -65,7 +66,7 @@ public class CategoryController {
 
     @GetMapping("/edit/{id}")
     public String showEditCategoryPage(@PathVariable Integer id, Model model){
-        model.addAttribute("category", categoryService.findById(id));
+        model.addAttribute("category", new UpdateCategoryDto(categoryService.findById(id)));
         return "categories/edit-category";
     }
 

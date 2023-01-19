@@ -20,13 +20,22 @@
       Organize your tasks and boost your productivity with our user-friendly interface.
     </p>
     <br>
-    <p class="text-center">Please login in order to see your To Do List</p>
+    <span th:if="${user == null}">
+      <p class="text-center">Please login in order to see your To Do List</p>
+    </span>
     <br>
     <div style="text-align: center;">
-      <a href="/login" class="btn btn-primary">Login</a>
-      <a href="/register" class="btn btn-primary">Register</a>
+      <span th:if="${user == null}">
+        <a href="/login" class="btn btn-primary">Login</a>
+      </span>
+      <span th:if="${user == null}">
+        <a href="/register" class="btn btn-primary">Register</a>
+      </span>
       <span th:if="${user != null}">
-        <a th:href="@{/tasks/user/{userId}(userId=${user.id})}" class="btn btn-primary">Show Tasks</a>
+          <a th:href="@{/tasks/user/{userId}(userId=${user.id})}" class="btn btn-primary">Show Tasks</a>
+      </span>
+      <span th:if="${user != null}">
+        <a th:href="@{/logut}" class="btn btn-primary">Logout</a>
       </span>
     </div>
   </div>

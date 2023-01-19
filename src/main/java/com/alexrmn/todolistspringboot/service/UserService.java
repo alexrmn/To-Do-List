@@ -27,8 +27,8 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
-//        creating default categories
 
+        //creating default categories
         Category work = Category.builder().name("Work").build();
         work.setUser(user);
         Category shopping = Category.builder().name("Shopping").build();
