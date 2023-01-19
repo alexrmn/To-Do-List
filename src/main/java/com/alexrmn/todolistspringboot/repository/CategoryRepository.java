@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-    Category findByName(String name);
+    Optional<Category> findByName(String name);
 
     List<Category> findByUserId(Integer id);
 }

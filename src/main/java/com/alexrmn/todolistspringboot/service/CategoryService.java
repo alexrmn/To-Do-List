@@ -35,7 +35,8 @@ public class CategoryService {
     }
 
     public Category findByName(String name) {
-        return categoryRepository.findByName(name);
+        return categoryRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
     }
 
     public List<Category> findByUserId(Integer id) {
