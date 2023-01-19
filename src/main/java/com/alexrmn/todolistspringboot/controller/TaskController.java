@@ -8,9 +8,11 @@ import com.alexrmn.todolistspringboot.model.dto.UpdateTaskDto;
 import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/tasks")
@@ -41,12 +44,17 @@ public class TaskController {
         return "/tasks/showTasks";
     }
 
+
     @GetMapping("{id}")
     public String showEditTaskPage(@PathVariable Integer id, Model model, Authentication authentication) {
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         User user = new User(userDetails);
+        Task task = taskService.findById(id);
+        if (user.getId() != task.getUser().getId()) {
+            throw new AuthorizationServiceException("You are not authorized to see that task.");
+        }
         model.addAttribute("user", user);
-        model.addAttribute("task", new UpdateTaskDto(taskService.findById(id)));
+        model.addAttribute("task", new UpdateTaskDto(task));
         model.addAttribute("categories", categoryService.findByUserId(user.getId()));
         return "/tasks/task";
     }

@@ -8,11 +8,14 @@ import com.alexrmn.todolistspringboot.model.dto.UpdateCategoryDto;
 import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/categories")
@@ -37,7 +40,12 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public String showCategory(Model model, @PathVariable Integer id) {
+    public String showCategory(Model model, @PathVariable Integer id, Authentication authentication) {
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        User user = new User(myUserDetails);
+        if (user.getId() != categoryService.findById(id).getUser().getId()) {
+            throw new AuthorizationServiceException("You are not authorized to see that category.");
+        }
         model.addAttribute("category",categoryService.findById(id));
         model.addAttribute("tasks",taskService.findByCategoryId(id));
         return "categories/category";
