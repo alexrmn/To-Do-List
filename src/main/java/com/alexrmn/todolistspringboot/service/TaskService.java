@@ -59,6 +59,7 @@ public class TaskService {
         Task task = taskRepository.findById(updateTaskDto.getId())
                 .orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Task not found"));
 
+        task.setDescription(updateTaskDto.getDescription());
         task.setCategory(updateTaskDto.getCategory());
         task.setDeadline(updateTaskDto.getDeadline());
         task.setCompleted(updateTaskDto.isCompleted());
