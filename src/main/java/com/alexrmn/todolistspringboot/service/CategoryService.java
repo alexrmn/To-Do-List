@@ -3,8 +3,9 @@ package com.alexrmn.todolistspringboot.service;
 import com.alexrmn.todolistspringboot.exception.BusinessException;
 import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.dto.CreateCategoryDto;
+import com.alexrmn.todolistspringboot.model.dto.UpdateCategoryDto;
 import com.alexrmn.todolistspringboot.repository.CategoryRepository;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +47,11 @@ public class CategoryService {
         return categoryRepository.findByUserId(id);
     }
 
-    public void updateCategory(Category updatedCategory) {
-        Category category = categoryRepository.findById(updatedCategory.getId())
-                .orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Category with id " + updatedCategory.getId() + " wasn't found."));
-        category.setName(updatedCategory.getName());
-        category.setTasks(updatedCategory.getTasks());
+    public void updateCategory(UpdateCategoryDto updateCategoryDto) {
+        Category category = categoryRepository.findById(updateCategoryDto.getId())
+                .orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Category with id " + updateCategoryDto.getId() + " wasn't found."));
+        category.setName(updateCategoryDto.getName());
+        category.setTasks(updateCategoryDto.getTasks());
         categoryRepository.save(category);
     }
 

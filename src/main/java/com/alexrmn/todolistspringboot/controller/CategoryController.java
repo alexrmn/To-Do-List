@@ -6,6 +6,7 @@ import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.model.dto.CreateCategoryDto;
 import com.alexrmn.todolistspringboot.model.dto.UpdateCategoryDto;
+import com.alexrmn.todolistspringboot.model.dto.UpdateTaskDto;
 import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
 import com.alexrmn.todolistspringboot.util.AuthUtils;
@@ -70,24 +71,22 @@ public class CategoryController {
 
     @GetMapping("/edit/{id}")
     public String showEditCategoryPage(@PathVariable Integer id, Model model, Authentication authentication){
-        if (AuthUtils.categoryBelongsToUser(categoryService.findById(id), authentication)) {
+        if (AuthUtils.categoryBelongsToUser(categoryService.findById(id), authentication) && !AuthUtils.isAdmin(authentication)) {
             throw new BusinessException(HttpStatus.FORBIDDEN, "You are not authorised to see this category");
         }
-        model.addAttribute("category", new UpdateCategoryDto(categoryService.findById(id)));
+        Category category = categoryService.findById(id);
+        model.addAttribute("category", new UpdateCategoryDto(category));
         return "categories/edit-category";
     }
 
     @PostMapping("/edit/{id}/save")
-    public String updateCategory(@Valid Category category, BindingResult bindingResult, @PathVariable Integer id, Authentication authentication){
+    public String updateCategory(@Valid UpdateCategoryDto updateCategoryDto, BindingResult bindingResult, @PathVariable Integer id){
         if (bindingResult.hasErrors()) {
             return "/categories/categoryValidationError";
         }
-        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        User user = new User(myUserDetails);
-        Category category1 = categoryService.findById(id);
-        category1.setName(category.getName());
-        categoryService.updateCategory(category1);
-        return "redirect:/categories/user/" + user.getId();
+        updateCategoryDto.setUser(categoryService.findById(id).getUser());
+        categoryService.updateCategory(updateCategoryDto);
+        return "redirect:/categories/user/" + updateCategoryDto.getUser().getId();
     }
 
     @GetMapping("/show-all-categories")
