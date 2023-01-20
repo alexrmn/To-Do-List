@@ -16,7 +16,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests()
-                .requestMatchers("/","/register", "/tasks/taskValidationError").permitAll()
+                .requestMatchers("/","/register", "/tasks/taskValidationError", "/logout").permitAll()
                 .requestMatchers("/categories/show-all-categories").hasRole("ADMIN")
                 .requestMatchers("/task/show-all-tasks").hasRole("ADMIN")
                 .requestMatchers("/tasks/**").hasRole("USER")

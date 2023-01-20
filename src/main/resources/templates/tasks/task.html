@@ -9,7 +9,7 @@
           crossorigin="anonymous">
 </head>
 <body>
-<H1 class="text-center">Edit New Task</H1>
+<H1 class="text-center">Edit  Task</H1>
 <div class="container mt-5, align-content-center" style="width: 300px">
     <form th:action="@{/tasks/{id}/edit(id=${task.id})}" th:method="post" th:object="${task}">
         <div class="form-group row">

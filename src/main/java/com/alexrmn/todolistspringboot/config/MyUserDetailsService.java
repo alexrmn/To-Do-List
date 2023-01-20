@@ -1,8 +1,10 @@
 package com.alexrmn.todolistspringboot.config;
 
+import com.alexrmn.todolistspringboot.exception.BusinessException;
 import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,7 +18,7 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "User not found"));
 
         return new MyUserDetails(user);
     }

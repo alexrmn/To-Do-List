@@ -5,6 +5,7 @@ import com.alexrmn.todolistspringboot.config.MyUserDetails;
 import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.model.dto.CreateUserDto;
 import com.alexrmn.todolistspringboot.service.UserService;
+import com.alexrmn.todolistspringboot.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -28,6 +29,9 @@ public class HomepageController {
             User user = new User(userDetails);
             model.addAttribute("user", user);
         }
+        if (authentication != null && AuthUtils.isAdmin(authentication)) {
+            return  "adminHomepage";
+        }
         return "homepage";
     }
 
@@ -40,10 +44,9 @@ public class HomepageController {
 
     @PostMapping("/register")
     public String registerUser(@Valid CreateUserDto createUserDto, BindingResult bindingResult) {
-        //todo
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult);
-            throw new RuntimeException("Error creating user");
+            return "userValidationError";
         }
         userService.saveUser(createUserDto);
         return "redirect:/";

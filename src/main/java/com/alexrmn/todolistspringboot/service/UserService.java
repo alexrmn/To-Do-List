@@ -1,14 +1,18 @@
 package com.alexrmn.todolistspringboot.service;
 
+import com.alexrmn.todolistspringboot.exception.BusinessException;
 import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.model.dto.CreateUserDto;
 import com.alexrmn.todolistspringboot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.flyway.FlywayProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,5 +53,9 @@ public class UserService {
         categoryService.saveCategory(chores);
         categoryService.saveCategory(fitness);
 
+    }
+
+    public User findById(Integer id) {
+        return userRepository.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "User not found"));
     }
 }

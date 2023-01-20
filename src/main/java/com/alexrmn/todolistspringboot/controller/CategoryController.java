@@ -1,21 +1,21 @@
 package com.alexrmn.todolistspringboot.controller;
 
 import com.alexrmn.todolistspringboot.config.MyUserDetails;
+import com.alexrmn.todolistspringboot.exception.BusinessException;
 import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.model.dto.CreateCategoryDto;
 import com.alexrmn.todolistspringboot.model.dto.UpdateCategoryDto;
 import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
+import com.alexrmn.todolistspringboot.util.AuthUtils;
 import jakarta.validation.Valid;
-import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 @Controller
 @RequestMapping("/categories")
@@ -41,10 +41,8 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public String showCategory(Model model, @PathVariable Integer id, Authentication authentication) {
-        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        User user = new User(myUserDetails);
-        if (user.getId() != categoryService.findById(id).getUser().getId()) {
-            throw new AuthorizationServiceException("You are not authorized to see that category.");
+        if (AuthUtils.categoryBelongsToUser(categoryService.findById(id), authentication)) {
+            throw new BusinessException(HttpStatus.FORBIDDEN, "You are not authorised to see this category");
         }
         model.addAttribute("category",categoryService.findById(id));
         model.addAttribute("tasks",taskService.findByCategoryId(id));
@@ -64,16 +62,17 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}/delete")
-    public String deleteCategory(Model model, @PathVariable Integer id, Authentication authentication) {
-        model.addAttribute("category", categoryService.findById(id));
-        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        User user = new User(myUserDetails);
+    public String deleteCategory(@PathVariable Integer id) {
+        User user = categoryService.findById(id).getUser();
         categoryService.deleteCategory(id);
         return "redirect:/categories/user/" + user.getId();
     }
 
     @GetMapping("/edit/{id}")
-    public String showEditCategoryPage(@PathVariable Integer id, Model model){
+    public String showEditCategoryPage(@PathVariable Integer id, Model model, Authentication authentication){
+        if (AuthUtils.categoryBelongsToUser(categoryService.findById(id), authentication)) {
+            throw new BusinessException(HttpStatus.FORBIDDEN, "You are not authorised to see this category");
+        }
         model.addAttribute("category", new UpdateCategoryDto(categoryService.findById(id)));
         return "categories/edit-category";
     }

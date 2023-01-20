@@ -1,9 +1,11 @@
 package com.alexrmn.todolistspringboot.service;
 
+import com.alexrmn.todolistspringboot.exception.BusinessException;
 import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.dto.CreateCategoryDto;
 import com.alexrmn.todolistspringboot.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,12 +34,12 @@ public class CategoryService {
 
     public Category findById(Integer id) {
        return categoryRepository.findById(id)
-               .orElseThrow(() -> new EntityNotFoundException("Category with id " + id + " wasn't found."));
+               .orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Category with id " + id + " wasn't found."));
     }
 
     public Category findByName(String name) {
         return categoryRepository.findByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+                .orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Category not found"));
     }
 
     public List<Category> findByUserId(Integer id) {
@@ -46,14 +48,14 @@ public class CategoryService {
 
     public void updateCategory(Category updatedCategory) {
         Category category = categoryRepository.findById(updatedCategory.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Category with id " + updatedCategory.getId() + " wasn't found."));
+                .orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Category with id " + updatedCategory.getId() + " wasn't found."));
         category.setName(updatedCategory.getName());
         category.setTasks(updatedCategory.getTasks());
         categoryRepository.save(category);
     }
 
     public void deleteCategory(Integer id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Category not found"));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Category not found"));
         categoryRepository.delete(category);
     }
 

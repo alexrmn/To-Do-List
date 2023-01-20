@@ -1,10 +1,12 @@
 package com.alexrmn.todolistspringboot.service;
 
+import com.alexrmn.todolistspringboot.exception.BusinessException;
 import com.alexrmn.todolistspringboot.model.Task;
 import com.alexrmn.todolistspringboot.model.dto.CreateTaskDto;
 import com.alexrmn.todolistspringboot.model.dto.UpdateTaskDto;
 import com.alexrmn.todolistspringboot.repository.TaskRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +34,7 @@ public class TaskService {
 
     public Task findById(Integer id){
         return taskRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Task with id " + id + " wasn't found."));
+                .orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Task with id " + id + " wasn't found."));
 
     }
 
@@ -49,13 +51,13 @@ public class TaskService {
     }
 
     public void deleteTask(Integer id) {
-        Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Task not found"));
         taskRepository.delete(task);
     }
 
     public void updateTask(UpdateTaskDto updateTaskDto) {
         Task task = taskRepository.findById(updateTaskDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
+                .orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Task not found"));
 
         task.setCategory(updateTaskDto.getCategory());
         task.setDeadline(updateTaskDto.getDeadline());
