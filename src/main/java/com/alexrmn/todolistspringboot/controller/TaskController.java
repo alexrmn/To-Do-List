@@ -12,6 +12,7 @@ import com.alexrmn.todolistspringboot.service.UserService;
 import com.alexrmn.todolistspringboot.util.AuthUtils;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -94,7 +95,10 @@ public class TaskController {
     }
 
     @GetMapping("/show-all-tasks")
-    public String showTasks(Model model){
+    public String showTasks(Model model, Authentication authentication){
+        if (!AuthUtils.isAdmin(authentication)) {
+            throw new BusinessException(HttpStatus.FORBIDDEN, "not authorized");
+        }
         model.addAttribute("tasks", taskService.findAll());
         return "/tasks/showAllTasks";
     }

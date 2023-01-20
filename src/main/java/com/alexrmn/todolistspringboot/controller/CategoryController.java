@@ -6,7 +6,6 @@ import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.model.dto.CreateCategoryDto;
 import com.alexrmn.todolistspringboot.model.dto.UpdateCategoryDto;
-import com.alexrmn.todolistspringboot.model.dto.UpdateTaskDto;
 import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
 import com.alexrmn.todolistspringboot.util.AuthUtils;
@@ -90,7 +89,10 @@ public class CategoryController {
     }
 
     @GetMapping("/show-all-categories")
-    public String showCategories(Model model, @ModelAttribute Category category){
+    public String showCategories(Model model, @ModelAttribute Category category, Authentication authentication){
+        if (!AuthUtils.isAdmin(authentication)) {
+            throw new BusinessException(HttpStatus.FORBIDDEN, "not authorized");
+        }
         model.addAttribute("categories",categoryService.findAll());
         return "categories/showAllCategories";
     }
