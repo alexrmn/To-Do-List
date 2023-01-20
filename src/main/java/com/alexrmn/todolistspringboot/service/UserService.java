@@ -23,6 +23,13 @@ public class UserService {
     private final CategoryService categoryService;
 
     public void saveUser(CreateUserDto userDto) {
+        String username = userDto.getUsername();
+        String email = userDto.getEmail();
+
+        if (userRepository.findByUsername(username).isPresent() || userRepository.findByEmail(email).isPresent()) {
+            throw  new BusinessException(HttpStatus.CONFLICT, "User with that email or username already exists");
+        }
+
         User user = User.builder()
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
@@ -58,4 +65,5 @@ public class UserService {
     public User findById(Integer id) {
         return userRepository.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "User not found"));
     }
+
 }
