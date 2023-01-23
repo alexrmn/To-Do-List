@@ -6,30 +6,23 @@ import com.alexrmn.todolistspringboot.model.dto.CreateTaskDto;
 import com.alexrmn.todolistspringboot.model.dto.UpdateTaskDto;
 import com.alexrmn.todolistspringboot.repository.TaskRepository;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final CategoryService categoryService;
+//    private final CategoryService categoryService;
 
-    public TaskService(TaskRepository taskRepository, CategoryService categoryService) {
-        this.taskRepository = taskRepository;
-        this.categoryService = categoryService;
-    }
+
 
     public List<Task> findAll(){
-        List<Task> tasks = taskRepository.findAll();
-//        for (Task task: tasks) {
-//            if (task.getCategory() == null) {
-//                task.setCategory(categoryService.findByName("None"));
-//            }
-//        }
-        return tasks;
+        return taskRepository.findAll();
     }
 
     public Task findById(Integer id){

@@ -4,12 +4,14 @@ import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.User;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Data;
 import org.aspectj.lang.annotation.After;
 
 import java.time.LocalDate;
 
 @Data
+@Builder
 public class CreateTaskDto {
 
     @NotBlank
