@@ -4,6 +4,7 @@ import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.Task;
 import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.model.dto.CreateTaskDto;
+import com.alexrmn.todolistspringboot.model.dto.UpdateTaskDto;
 import com.alexrmn.todolistspringboot.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -123,7 +124,6 @@ class TaskServiceTest {
     }
 
 
-    @Disabled("TODO: Still need to work on it")
     @Test
     void deleteTask() {
         //given
@@ -146,5 +146,22 @@ class TaskServiceTest {
 
     @Test
     void updateTask() {
+        Task task = Task.builder()
+                .id(1)
+                .description("test task")
+                .deadline(LocalDate.now())
+                .completed(false)
+                .build();
+        UpdateTaskDto updateTaskDto = new UpdateTaskDto(task);
+        when(taskRepository.findById(1)).thenReturn(Optional.of(task));
+
+        underTest.updateTask(updateTaskDto);
+
+        ArgumentCaptor<Task> taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
+        verify(taskRepository, times(1)).save(taskArgumentCaptor.capture());
+        Task capturedTask = taskArgumentCaptor.getValue();
+        assertEquals(task,capturedTask);
+
+
     }
 }

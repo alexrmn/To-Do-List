@@ -5,8 +5,7 @@ import com.alexrmn.todolistspringboot.model.Task;
 import com.alexrmn.todolistspringboot.model.User;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
