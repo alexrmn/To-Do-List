@@ -30,7 +30,6 @@ class TaskServiceTest {
     @Mock
     private TaskRepository taskRepository;
 
-    @InjectMocks
     private TaskService underTest;
 
     @BeforeEach

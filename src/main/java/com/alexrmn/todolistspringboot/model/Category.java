@@ -1,10 +1,12 @@
 package com.alexrmn.todolistspringboot.model;
 
+import com.alexrmn.todolistspringboot.model.dto.CreateCategoryDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.lang.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,5 +32,10 @@ public class Category {
 
     @ManyToOne
     private User user;
+
+    public Category(CreateCategoryDto createCategoryDto){
+        this.name = createCategoryDto.getName();
+        this.user = createCategoryDto.getUser();
+    }
 
 }

@@ -5,7 +5,6 @@ import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.dto.CreateCategoryDto;
 import com.alexrmn.todolistspringboot.model.dto.UpdateCategoryDto;
 import com.alexrmn.todolistspringboot.repository.CategoryRepository;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public void createCategory(CreateCategoryDto createCategoryDto) {
+    public void saveCategory(CreateCategoryDto createCategoryDto) {
         Category category = Category.builder()
                 .name(createCategoryDto.getName())
                 .user(createCategoryDto.getUser())
@@ -55,8 +54,8 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    public void deleteCategory(Integer id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Category not found"));
+    public void deleteCategory(Category category) {
+        categoryRepository.findById(category.getId()).orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Category not found"));
         categoryRepository.delete(category);
     }
 

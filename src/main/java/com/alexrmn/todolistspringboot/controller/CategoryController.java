@@ -57,14 +57,14 @@ public class CategoryController {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         User user = new User(myUserDetails);
         createCategoryDto.setUser(user);
-        categoryService.createCategory(createCategoryDto);
+        categoryService.saveCategory(createCategoryDto);
         return "redirect:/categories/user/" + user.getId();
     }
 
     @DeleteMapping("/{id}/delete")
     public String deleteCategory(@PathVariable Integer id) {
         User user = categoryService.findById(id).getUser();
-        categoryService.deleteCategory(id);
+        categoryService.deleteCategory(categoryService.findById(id));
         return "redirect:/categories/user/" + user.getId();
     }
 
