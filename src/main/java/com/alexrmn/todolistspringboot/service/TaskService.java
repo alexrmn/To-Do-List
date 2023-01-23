@@ -43,8 +43,13 @@ public class TaskService {
         taskRepository.save(new Task(createTaskDto));
     }
 
-    public void deleteTask(Integer id) {
-        Task task = taskRepository.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Task not found"));
+//    public void deleteTask(Integer id) {
+//        Task task = taskRepository.findById(id).orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Task not found"));
+//        taskRepository.delete(task);
+//    }
+
+    public void deleteTask(Task task) {
+        taskRepository.findById(task.getId()).orElseThrow(() -> new BusinessException(HttpStatus.NO_CONTENT, "Task not found"));
         taskRepository.delete(task);
     }
 

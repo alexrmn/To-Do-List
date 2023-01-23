@@ -71,7 +71,7 @@ public class TaskController {
     @DeleteMapping("/{id}/delete")
     public String deleteTask(@PathVariable Integer id) {
         User user = taskService.findById(id).getUser();
-        taskService.deleteTask(id);
+        taskService.deleteTask(taskService.findById(id));
         return "redirect:/tasks/user/" + user.getId();
     }
 
