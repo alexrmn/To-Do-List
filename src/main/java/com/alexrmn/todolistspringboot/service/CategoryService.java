@@ -5,19 +5,17 @@ import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.dto.CreateCategoryDto;
 import com.alexrmn.todolistspringboot.model.dto.UpdateCategoryDto;
 import com.alexrmn.todolistspringboot.repository.CategoryRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
 
     public void saveCategory(CreateCategoryDto createCategoryDto) {
         Category category = Category.builder()

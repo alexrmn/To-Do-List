@@ -11,6 +11,7 @@ import com.alexrmn.todolistspringboot.service.TaskService;
 import com.alexrmn.todolistspringboot.service.UserService;
 import com.alexrmn.todolistspringboot.util.AuthUtils;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -23,17 +24,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/tasks")
+@RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService taskService;
     private final CategoryService categoryService;
-    private final UserService userService;
-
-    public TaskController(TaskService taskService, CategoryService categoryService, UserService userService) {
-        this.taskService = taskService;
-        this.categoryService = categoryService;
-        this.userService = userService;
-    }
 
     @GetMapping("/user/{id}")
     public String getTasksByUserId(@PathVariable Integer id, Model model, Authentication authentication) {

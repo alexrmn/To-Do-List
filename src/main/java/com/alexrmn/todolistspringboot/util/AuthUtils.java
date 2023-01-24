@@ -12,7 +12,7 @@ public class AuthUtils {
     }
 
     public static boolean categoryBelongsToUser(Category category, Authentication authentication) {
-        return !authentication.getName().equals(category.getUser().getUsername());
+        return authentication.getName().equals(category.getUser().getUsername());
     }
 
     public static boolean isAdmin(Authentication authentication){

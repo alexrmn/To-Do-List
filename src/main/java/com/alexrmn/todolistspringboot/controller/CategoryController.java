@@ -10,6 +10,7 @@ import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
 import com.alexrmn.todolistspringboot.util.AuthUtils;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -19,15 +20,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/categories")
+@RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
     private final TaskService taskService;
-
-    public CategoryController(CategoryService categoryService, TaskService taskService) {
-        this.categoryService = categoryService;
-        this.taskService = taskService;
-    }
 
     @GetMapping("/user/{id}")
     public String showCategoriesByUserId(@PathVariable Integer id, Model model, Authentication authentication) {
