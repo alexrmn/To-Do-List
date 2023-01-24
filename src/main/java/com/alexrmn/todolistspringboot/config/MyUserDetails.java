@@ -4,6 +4,7 @@ import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.Task;
 import com.alexrmn.todolistspringboot.model.User;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,14 @@ public class MyUserDetails implements UserDetails {
 
     public MyUserDetails(User user) {
         this.user = user;
+    }
+
+    public MyUserDetails(Integer id, String username, String password, String email, String roles) {
+        this.user = new User();
+        this.user.setUsername(username);
+        this.user.setPassword(password);
+        this.user.setEmail(email);
+        this.user.setRoles(roles);
     }
 
     @Override
