@@ -52,5 +52,10 @@ public class HomepageController {
         return "redirect:/";
     }
 
+    @PostMapping("/logout")
+    public String logout() {
+        return "redirect:/";
+    }
+
 
 }

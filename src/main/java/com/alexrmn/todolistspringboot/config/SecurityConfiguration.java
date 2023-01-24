@@ -22,7 +22,10 @@ public class SecurityConfiguration {
                 .requestMatchers("/tasks/**", "/categories/**").hasAnyRole("USER", "ADMIN")
                 .and()
                 .formLogin()
-                .defaultSuccessUrl("/");
+                .defaultSuccessUrl("/")
+                .and()
+                .logout()
+                .logoutUrl("/");
         return http.build();
     }
 
