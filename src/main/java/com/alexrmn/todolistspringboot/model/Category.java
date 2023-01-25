@@ -23,7 +23,6 @@ public class Category {
     @Column(name="id")
     private Integer id;
 
-    @NotBlank(message="Cannot be blank")
     @Column(name="name")
     private String name;
 

@@ -22,13 +22,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
     private String username;
 
-    @NotNull
     private  String email;
 
-    @NotNull
     private String password;
 
     private String roles;
