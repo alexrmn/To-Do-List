@@ -2,6 +2,7 @@ package com.alexrmn.todolistspringboot.util;
 
 import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.Task;
+import com.alexrmn.todolistspringboot.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -22,5 +23,9 @@ public class AuthUtils {
                 .map(GrantedAuthority::getAuthority)
                 .toList()
                 .contains("ROLE_ADMIN");
+    }
+
+    public static User getLoggedInUser(Authentication authentication) {
+        return (User) authentication.getPrincipal();
     }
 }

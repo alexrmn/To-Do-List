@@ -11,6 +11,8 @@ import com.alexrmn.todolistspringboot.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,20 +31,16 @@ public class TaskController {
 
     @GetMapping("/user/{id}")
     public String getTasksByUserId(@PathVariable Integer id, Model model, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
         List<Task> usersTasks = taskService.findByUserId(id);
         model.addAttribute("tasks", usersTasks);
-        model.addAttribute("user", user);
+        model.addAttribute("user", AuthUtils.getLoggedInUser(authentication));
         return "/tasks/showTasks";
     }
 
 
 
     @GetMapping("{id}")
-    public String showEditTaskPage(@PathVariable Integer id, Model model, Authentication authentication) {
-        if (!AuthUtils.taskBelongsToUser(taskService.findById(id), authentication) && !AuthUtils.isAdmin(authentication)) {
-            throw new BusinessException(HttpStatus.FORBIDDEN, "You are not authorised to see this task");
-        }
+    public String showEditTaskPage(@PathVariable Integer id, Model model) {
         Task task = taskService.findById(id);
         model.addAttribute("task", new UpdateTaskDto(task));
         model.addAttribute("categories", categoryService.findByUserId(task.getUser().getId()));
@@ -50,47 +48,40 @@ public class TaskController {
     }
 
     @PostMapping("{id}/edit")
-    public String editTask(@Valid UpdateTaskDto updateTaskDto, BindingResult bindingResult, @PathVariable Integer id) {
+    public String editTask(@Valid UpdateTaskDto updateTaskDto, BindingResult bindingResult, Authentication authentication) {
         if (bindingResult.hasErrors()) {
             return "/tasks/taskValidationError";
         }
-        updateTaskDto.setUser(taskService.findById(id).getUser());
         taskService.updateTask(updateTaskDto);
-        return "redirect:/tasks/user/" + updateTaskDto.getUser().getId();
+        return "redirect:/tasks/user/" + AuthUtils.getLoggedInUser(authentication).getId();
     }
 
     @DeleteMapping("/{id}/delete")
-    public String deleteTask(@PathVariable Integer id) {
-        User user = taskService.findById(id).getUser();
+    public String deleteTask(@PathVariable Integer id, Authentication authentication) {
         taskService.deleteTask(taskService.findById(id));
-        return "redirect:/tasks/user/" + user.getId();
+        return "redirect:/tasks/user/" + AuthUtils.getLoggedInUser(authentication).getId();
     }
 
     @GetMapping("/new")
     public String showCreateNewTaskPage(Model model, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        User user = AuthUtils.getLoggedInUser(authentication);
         model.addAttribute("task", new Task());
         model.addAttribute("categories", categoryService.findByUserId(user.getId()));
         return "/tasks/createNewTask";
     }
 
     @PostMapping("/create-new-task")
-    public String createNewTask(@Valid CreateTaskDto createTaskDto, BindingResult bindingResult, Authentication authentication) {
-        System.out.println(bindingResult);
+    public String createNewTask(@Valid CreateTaskDto createTaskDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/tasks/taskValidationError";
         }
-        User user = (User) authentication.getPrincipal();
-        createTaskDto.setUser(user);
         taskService.saveTask(createTaskDto);
         return "redirect:/tasks/user/" + createTaskDto.getUser().getId();
     }
 
+    @Secured("ROLE_ADMIN")
     @GetMapping("/show-all-tasks")
-    public String showTasks(Model model, Authentication authentication){
-        if (!AuthUtils.isAdmin(authentication)) {
-            throw new BusinessException(HttpStatus.FORBIDDEN, "not authorized");
-        }
+    public String showTasks(Model model){
         model.addAttribute("tasks", taskService.findAll());
         return "/tasks/showAllTasks";
     }
