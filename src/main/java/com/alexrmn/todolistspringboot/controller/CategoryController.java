@@ -1,6 +1,5 @@
 package com.alexrmn.todolistspringboot.controller;
 
-import com.alexrmn.todolistspringboot.config.MyUserDetails;
 import com.alexrmn.todolistspringboot.exception.BusinessException;
 import com.alexrmn.todolistspringboot.model.Category;
 import com.alexrmn.todolistspringboot.model.User;
@@ -28,8 +27,7 @@ public class CategoryController {
 
     @GetMapping("/user/{id}")
     public String showCategoriesByUserId(@PathVariable Integer id, Model model, Authentication authentication) {
-        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        User user = new User(myUserDetails);
+        User user = (User) authentication.getPrincipal();
         model.addAttribute("categories", categoryService.findByUserId(id));
         model.addAttribute("user", user);
         model.addAttribute("category", new CreateCategoryDto());
@@ -51,8 +49,7 @@ public class CategoryController {
         if (bindingResult.hasErrors()) {
             return "/categories/categoryValidationError";
         }
-        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        User user = new User(myUserDetails);
+        User user = (User) authentication.getPrincipal();
         createCategoryDto.setUser(user);
         categoryService.saveCategory(createCategoryDto);
         return "redirect:/categories/user/" + user.getId();

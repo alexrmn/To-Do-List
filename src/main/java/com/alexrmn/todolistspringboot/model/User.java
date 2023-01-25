@@ -1,13 +1,14 @@
 package com.alexrmn.todolistspringboot.model;
 
-import com.alexrmn.todolistspringboot.config.MyUserDetails;
 import com.alexrmn.todolistspringboot.model.dto.CreateUserDto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -36,20 +37,35 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Category> categories;
 
-    public User(MyUserDetails myUserDetails) {
-        this.setId(myUserDetails.getId());
-        this.setUsername(myUserDetails.getUsername());
-        this.setPassword(myUserDetails.getPassword());
-        this.setEmail(myUserDetails.getEmail());
-        this.setCategories(myUserDetails.getCategories());
-        this.setRoles(myUserDetails.getRoles());
-        this.setTasks(myUserDetails.getTasks());
-    }
-
-
     public User(CreateUserDto createUserDto) {
         this.setUsername(createUserDto.getUsername());
         this.setPassword(createUserDto.getPassword());
         this.setEmail(createUserDto.getEmail());
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.stream(roles.split(",")).map(SimpleGrantedAuthority::new).toList();
+
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
