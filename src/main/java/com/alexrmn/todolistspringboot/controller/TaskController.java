@@ -1,6 +1,5 @@
 package com.alexrmn.todolistspringboot.controller;
 
-import com.alexrmn.todolistspringboot.config.MyUserDetails;
 import com.alexrmn.todolistspringboot.exception.BusinessException;
 import com.alexrmn.todolistspringboot.model.Task;
 import com.alexrmn.todolistspringboot.model.User;
@@ -8,12 +7,10 @@ import com.alexrmn.todolistspringboot.model.dto.CreateTaskDto;
 import com.alexrmn.todolistspringboot.model.dto.UpdateTaskDto;
 import com.alexrmn.todolistspringboot.service.CategoryService;
 import com.alexrmn.todolistspringboot.service.TaskService;
-import com.alexrmn.todolistspringboot.service.UserService;
 import com.alexrmn.todolistspringboot.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,8 +29,7 @@ public class TaskController {
 
     @GetMapping("/user/{id}")
     public String getTasksByUserId(@PathVariable Integer id, Model model, Authentication authentication) {
-        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        User user = new User(myUserDetails);
+        User user = (User) authentication.getPrincipal();
         List<Task> usersTasks = taskService.findByUserId(id);
         model.addAttribute("tasks", usersTasks);
         model.addAttribute("user", user);
@@ -72,19 +68,20 @@ public class TaskController {
 
     @GetMapping("/new")
     public String showCreateNewTaskPage(Model model, Authentication authentication) {
-        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
         model.addAttribute("task", new Task());
-        model.addAttribute("categories", categoryService.findByUserId(userDetails.getId()));
+        model.addAttribute("categories", categoryService.findByUserId(user.getId()));
         return "/tasks/createNewTask";
     }
 
     @PostMapping("/create-new-task")
     public String createNewTask(@Valid CreateTaskDto createTaskDto, BindingResult bindingResult, Authentication authentication) {
+        System.out.println(bindingResult);
         if (bindingResult.hasErrors()) {
             return "/tasks/taskValidationError";
         }
-        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        createTaskDto.setUser(new User((myUserDetails)));
+        User user = (User) authentication.getPrincipal();
+        createTaskDto.setUser(user);
         taskService.saveTask(createTaskDto);
         return "redirect:/tasks/user/" + createTaskDto.getUser().getId();
     }

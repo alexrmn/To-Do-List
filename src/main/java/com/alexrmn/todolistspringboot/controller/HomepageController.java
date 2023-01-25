@@ -1,7 +1,6 @@
 package com.alexrmn.todolistspringboot.controller;
 
 
-import com.alexrmn.todolistspringboot.config.MyUserDetails;
 import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.model.dto.CreateUserDto;
 import com.alexrmn.todolistspringboot.service.UserService;
@@ -25,8 +24,7 @@ public class HomepageController {
     @GetMapping("/")
     public String showHomepage(Model model, Authentication authentication) {
         if(authentication != null) {
-            MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
-            User user = new User(userDetails);
+            User user = (User) authentication.getPrincipal();
             model.addAttribute("user", user);
         }
         if (authentication != null && AuthUtils.isAdmin(authentication)) {
