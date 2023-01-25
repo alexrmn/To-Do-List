@@ -6,6 +6,7 @@ import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.model.dto.CreateTaskDto;
 import com.alexrmn.todolistspringboot.model.dto.UpdateTaskDto;
 import com.alexrmn.todolistspringboot.repository.TaskRepository;
+import com.alexrmn.todolistspringboot.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -30,11 +31,14 @@ class TaskServiceTest {
     @Mock
     private TaskRepository taskRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     private TaskService underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new TaskService(taskRepository);
+        underTest = new TaskService(taskRepository, userRepository);
     }
 
     @Test

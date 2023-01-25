@@ -20,6 +20,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests()
+                .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/","/register", "/tasks/taskValidationError", "/logout").permitAll()
                 .requestMatchers("/categories/show-all-categories", "/tasks/show-all-tasks").hasRole("ADMIN")
                 .requestMatchers("/tasks/**", "/categories/**").hasAnyRole("USER", "ADMIN")

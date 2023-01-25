@@ -6,11 +6,16 @@ import com.alexrmn.todolistspringboot.model.User;
 import com.alexrmn.todolistspringboot.model.dto.CreateCategoryDto;
 import com.alexrmn.todolistspringboot.model.dto.UpdateCategoryDto;
 import com.alexrmn.todolistspringboot.repository.CategoryRepository;
+import com.alexrmn.todolistspringboot.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +31,14 @@ class CategoryServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     private CategoryService underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new CategoryService(categoryRepository);
+        underTest = new CategoryService(categoryRepository, userRepository);
     }
 
     @Test
@@ -49,19 +57,40 @@ class CategoryServiceTest {
     }
 
     @Test
-    void saveCategoryWithDto() {
-        CreateCategoryDto createCategoryDto = CreateCategoryDto.builder()
-                .name("Test Category")
-                .user(new User())
-                .build();
-        Category category = new Category(createCategoryDto);
+    public void saveCategoryTest_withAuthentication() {
+        // Create a mock Authentication object
+        Authentication authentication = mock(Authentication.class);
 
+        // Create a mock User object
+        User user = new User();
+        user.setId(1);
+        user.setUsername("testuser");
+
+        // Set up the mock Authentication object to return the mock User object when getPrincipal is called
+        when(authentication.getPrincipal()).thenReturn(user);
+
+        // Set up the SecurityContext to return the mock Authentication object when getAuthentication is called
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        // Create a CreateCategoryDto instance
+        CreateCategoryDto createCategoryDto = new CreateCategoryDto();
+        createCategoryDto.setName("Test Category");
+
+        // Create a Category instance
+        Category category = new Category();
+        category.setName(createCategoryDto.getName());
+        category.setUser(user);
+
+        // Set up the mock object to return the Category instance when the save method is called
+        when(categoryRepository.save(category)).thenReturn(category);
+
+        // Call the saveCategory method
         underTest.saveCategory(createCategoryDto);
 
-        ArgumentCaptor<Category> categoryArgumentCaptor = ArgumentCaptor.forClass(Category.class);
-        verify(categoryRepository).save(categoryArgumentCaptor.capture());
-        Category capturedCategory = categoryArgumentCaptor.getValue();
-        assertEquals(category,capturedCategory);
+        // Verify that the save method was called with the expected Category instance
+        verify(categoryRepository, times(1)).save(category);
     }
 
     @Test
