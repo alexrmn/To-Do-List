@@ -11,6 +11,7 @@ import com.alexrmn.todolistspringboot.util.AuthUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,18 +28,14 @@ public class CategoryController {
 
     @GetMapping("/user/{id}")
     public String showCategoriesByUserId(@PathVariable Integer id, Model model, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
         model.addAttribute("categories", categoryService.findByUserId(id));
-        model.addAttribute("user", user);
+        model.addAttribute("user", AuthUtils.getLoggedInUser(authentication));
         model.addAttribute("category", new CreateCategoryDto());
         return "categories/showCategories";
     }
 
     @GetMapping("/{id}")
     public String showCategory(Model model, @PathVariable Integer id, Authentication authentication) {
-        if (AuthUtils.categoryBelongsToUser(categoryService.findById(id), authentication)) {
-            throw new BusinessException(HttpStatus.FORBIDDEN, "You are not authorised to see this category");
-        }
         model.addAttribute("category",categoryService.findById(id));
         model.addAttribute("tasks",taskService.findByCategoryId(id));
         return "categories/category";
@@ -49,44 +46,35 @@ public class CategoryController {
         if (bindingResult.hasErrors()) {
             return "/categories/categoryValidationError";
         }
-        User user = (User) authentication.getPrincipal();
-        createCategoryDto.setUser(user);
         categoryService.saveCategory(createCategoryDto);
-        return "redirect:/categories/user/" + user.getId();
+        return "redirect:/categories/user/" + AuthUtils.getLoggedInUser(authentication).getId();
     }
 
     @DeleteMapping("/{id}/delete")
-    public String deleteCategory(@PathVariable Integer id) {
-        User user = categoryService.findById(id).getUser();
+    public String deleteCategory(@PathVariable Integer id, Authentication authentication) {
         categoryService.deleteCategory(categoryService.findById(id));
-        return "redirect:/categories/user/" + user.getId();
+        return "redirect:/categories/user/" + AuthUtils.getLoggedInUser(authentication).getId();
     }
 
     @GetMapping("/edit/{id}")
-    public String showEditCategoryPage(@PathVariable Integer id, Model model, Authentication authentication){
-        if (AuthUtils.categoryBelongsToUser(categoryService.findById(id), authentication) && !AuthUtils.isAdmin(authentication)) {
-            throw new BusinessException(HttpStatus.FORBIDDEN, "You are not authorised to see this category");
-        }
+    public String showEditCategoryPage(@PathVariable Integer id, Model model ){
         Category category = categoryService.findById(id);
         model.addAttribute("category", new UpdateCategoryDto(category));
         return "categories/edit-category";
     }
 
     @PostMapping("/edit/{id}/save")
-    public String updateCategory(@Valid UpdateCategoryDto updateCategoryDto, BindingResult bindingResult, @PathVariable Integer id){
+    public String updateCategory(@Valid UpdateCategoryDto updateCategoryDto, BindingResult bindingResult, Authentication authentication){
         if (bindingResult.hasErrors()) {
             return "/categories/categoryValidationError";
         }
-        updateCategoryDto.setUser(categoryService.findById(id).getUser());
         categoryService.updateCategory(updateCategoryDto);
-        return "redirect:/categories/user/" + updateCategoryDto.getUser().getId();
+        return "redirect:/categories/user/" + AuthUtils.getLoggedInUser(authentication).getId();
     }
 
     @GetMapping("/show-all-categories")
+    @Secured("ROLE_ADMIN")
     public String showCategories(Model model, @ModelAttribute Category category, Authentication authentication){
-        if (!AuthUtils.isAdmin(authentication)) {
-            throw new BusinessException(HttpStatus.FORBIDDEN, "not authorized");
-        }
         model.addAttribute("categories",categoryService.findAll());
         return "categories/showAllCategories";
     }
