@@ -35,6 +35,9 @@
           <a th:href="@{/tasks/user/{userId}(userId=${user.id})}" class="btn btn-primary">Show Tasks</a>
       </span>
       <span th:if="${user != null}">
+          <a th:href="@{/categories/user/{userId}(userId=${user.id})}" class="btn btn-primary">Show Categories</a>
+      </span>
+      <span th:if="${user != null}">
         <a th:href="@{/logout}" class="btn btn-primary">Logout</a>
       </span>
     </div>
